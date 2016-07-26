@@ -5,36 +5,32 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://tumi.tech/"/>
-  <updated>2016-07-26T01:56:25.637Z</updated>
+  <updated>2016-07-26T02:15:00.240Z</updated>
   <id>http://tumi.tech/</id>
   
   <author>
-    <name>Charles tumi</name>
+    <name>Charles Tumi</name>
     
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Sayhello</title>
+    <title>Say Hello</title>
     <link href="http://tumi.tech/2016/07/26/sayhello/"/>
     <id>http://tumi.tech/2016/07/26/sayhello/</id>
     <published>2016-07-26T01:10:41.000Z</published>
-    <updated>2016-07-26T01:56:25.637Z</updated>
+    <updated>2016-07-26T02:15:00.240Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="Say-Hello"><a href="#Say-Hello" class="headerlink" title="Say Hello"></a>Say Hello</h1><blockquote>
-<p>Date: 2016-7-26</p>
-</blockquote>
-<p>经过一番折腾，终于在Hexo安家了。总的来说，它的配置和使用比Octopress要方便一些，且目前来讲Nodejs应该比Ruby圈子更火一些吧，虽然这两个都不会用哈哈。  </p>
+    <content type="html"><![CDATA[<p>经过一番折腾，终于在Hexo安家了。总的来说，它的配置和使用比Octopress要方便一些，且目前来讲Nodejs应该比Ruby圈子更火一些吧，虽然这两个都不会用哈哈。  </p>
 <p>目前来看博客系统很强大，主题丰富，对md的支持也使得版式可控性强，但还要考虑图床的问题，不过暂时还用不到，到时再说。</p>
 <p>OK, Stay calm and carry on.</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;Say-Hello&quot;&gt;&lt;a href=&quot;#Say-Hello&quot; class=&quot;headerlink&quot; title=&quot;Say Hello&quot;&gt;&lt;/a&gt;Say Hello&lt;/h1&gt;&lt;blockquote&gt;
-&lt;p&gt;Date: 2016-7-26&lt;/p&gt;
-&lt;/blockqu
+      &lt;p&gt;经过一番折腾，终于在Hexo安家了。总的来说，它的配置和使用比Octopress要方便一些，且目前来讲Nodejs应该比Ruby圈子更火一些吧，虽然这两个都不会用哈哈。  &lt;/p&gt;
+&lt;p&gt;目前来看博客系统很强大，主题丰富，对md的支持也使得版式可控性强，但还要考虑图床的问题
     
     </summary>
     
