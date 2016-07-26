@@ -2,23 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yoursite.com/404.html</loc>
+    <loc>http://tumi.tech/2016/07/26/sayhello/</loc>
+    
+    <lastmod>2016-07-26T01:56:25.637Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://tumi.tech/404.html</loc>
     
     <lastmod>2016-07-25T08:13:40.906Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/07/25/Hello-Hexo/</loc>
-    
-    <lastmod>2016-07-25T02:48:48.464Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/07/25/hello-world/</loc>
-    
-    <lastmod>2016-07-25T02:45:29.174Z</lastmod>
     
   </url>
   
