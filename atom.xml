@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://tumi.tech/"/>
-  <updated>2016-09-09T06:06:14.502Z</updated>
+  <updated>2016-09-09T06:08:43.072Z</updated>
   <id>http://tumi.tech/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>introduction_of_looknfeel</title>
-    <link href="http://tumi.tech/2016/09/09/looknfeel%E7%AE%80%E4%BB%8B/"/>
-    <id>http://tumi.tech/2016/09/09/looknfeel简介/</id>
+    <title>looknfeel简介</title>
+    <link href="http://tumi.tech/2016/09/09/introduction-of-looknfeel/"/>
+    <id>http://tumi.tech/2016/09/09/introduction-of-looknfeel/</id>
     <published>2016-09-09T05:37:45.000Z</published>
-    <updated>2016-09-09T06:06:14.502Z</updated>
+    <updated>2016-09-09T06:08:43.072Z</updated>
     
     <content type="html"><![CDATA[<h1 id="looknfeel简介"><a href="#looknfeel简介" class="headerlink" title="looknfeel简介"></a>looknfeel简介</h1><blockquote>
 <p>参考资料：<a href="http://static.cegui.org.uk/docs/0.7.1/fal_tut1.html" target="_blank" rel="external">http://static.cegui.org.uk/docs/0.7.1/fal_tut1.html</a></p>
