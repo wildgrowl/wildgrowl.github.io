@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>get_char_from_uft8string | tumi&#39;s blog</title>
+    <title>Lua中处理含中文的UTF-8字符串 | tumi&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="Charles Tumi">
@@ -75,7 +75,7 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/10/25/get-char-from-uft8string/" title="get_char_from_uft8string" itemprop="url">get_char_from_uft8string</a>
+      <a href="/2016/10/25/get-char-from-uft8string/" title="Lua中处理含中文的UTF-8字符串" itemprop="url">Lua中处理含中文的UTF-8字符串</a>
   </h1>
   <p class="article-author">By
     
@@ -133,12 +133,13 @@
 </table>
 <p>此外，有一个概念很重要，即UTF-8是单字节码，多字节存储，而非多字节码。这个概念告诉我们它是大小端无关的！这也保证了其在各平台的通用性。</p>
 <h1 id="2-UTF-8字符串截取算法"><a href="#2-UTF-8字符串截取算法" class="headerlink" title="2. UTF-8字符串截取算法"></a>2. UTF-8字符串截取算法</h1><p>该算法是从参考文献1看到的，先上代码。</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubUTF8String</span><span class="params">(s,n)</span></span></div><div class="line">	<span class="keyword">local</span> dropping = <span class="built_in">string</span>.byte(s, n + <span class="number">1</span>)      <span class="comment">-- 若当截取长度下一位字符是正常字符(&lt;128)或是多字节字符的开始(&gt;192)的话，或是有效字符串的最后一个字符，则直接返回该长度的字符串</span></div><div class="line">	<span class="keyword">if</span> <span class="keyword">not</span> dropping <span class="keyword">then</span> <span class="keyword">return</span> s <span class="keyword">end</span>           <span class="comment">-- 字符串结尾的情况返回</span></div><div class="line">	<span class="keyword">if</span> dropping &gt;= <span class="number">128</span> <span class="keyword">and</span> dropping &lt; <span class="number">192</span> <span class="keyword">then</span></div><div class="line">		<span class="keyword">return</span> SubUTF8String(s, n - <span class="number">1</span>)          <span class="comment">-- 若不是正常字符也不是多字节码的开始则向前探测</span></div><div class="line">	<span class="keyword">end</span></div><div class="line">	<span class="keyword">return</span> <span class="built_in">string</span>.sub(s, <span class="number">1</span>, n)</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubUTF8String</span><span class="params">(s,n)</span></span></div><div class="line">    <span class="keyword">local</span> dropping = <span class="built_in">string</span>.byte(s, n + <span class="number">1</span>)   <span class="comment">-- 若当截取长度下一位字符是正常字符(&lt;128)或是多字节字符的开始(&gt;192)的话，</span></div><div class="line">                                             <span class="comment">-- 或是有效字符串的最后一个字符，则直接返回该长度的字符串</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> dropping <span class="keyword">then</span> <span class="keyword">return</span> s <span class="keyword">end</span>        <span class="comment">-- 字符串结尾的情况返回</span></div><div class="line">    <span class="keyword">if</span> dropping &gt;= <span class="number">128</span> <span class="keyword">and</span> dropping &lt; <span class="number">192</span> <span class="keyword">then</span></div><div class="line">        <span class="keyword">return</span> SubUTF8String(s, n - <span class="number">1</span>)       <span class="comment">-- 若不是正常字符也不是多字节码的开始则向前探测</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">    <span class="keyword">return</span> <span class="built_in">string</span>.sub(s, <span class="number">1</span>, n)</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
 <p>首先该方法也要求我们的输入必须是有效的UTF8字符串（在我们的项目中这是自然满足的），第二个参数n是要截取的长度（字节长度）。</p>
 <p>在了解了UTF-8的结构后，对128和192这两个数字就不难理解了。若上面的if语句条件满足，则说明该字节所表示的字符是UTF-8中间的某个字节，需要向前探测。</p>
 <p>这个算法的好在于它是一个正确的尾调用（Tail return），虽然其样子与递归十分相似，但它不是递归的。尾调用的英文名称很好的描述了其特征，即对另一个函数的调用是紧跟在return后面的。就我目前的理解来看，尾调用的效率是介于递归和loop之间的，递归的开销主要在维护栈状态和函数调用开销，而尾调用避免了前者，无须担心栈溢出。</p>
 <h1 id="3-从UTF-8字符串得到全部有效字符"><a href="#3-从UTF-8字符串得到全部有效字符" class="headerlink" title="3. 从UTF_8字符串得到全部有效字符"></a>3. 从UTF_8字符串得到全部有效字符</h1><p>该算法在上述截取算法的基础上，把字符串中的全部字符分别拿出存到表中，表长即可显字符的个数。</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">GetValidChar</span><span class="params">(str)</span></span></div><div class="line">    <span class="keyword">local</span> chars = &#123;&#125;</div><div class="line">    <span class="keyword">local</span> count = <span class="number">0</span></div><div class="line">    <span class="keyword">local</span> i = <span class="number">1</span></div><div class="line">    <span class="keyword">local</span> j = <span class="number">1</span></div><div class="line">    <span class="keyword">local</span> strlen = <span class="built_in">string</span>.len(str)</div><div class="line">    <span class="keyword">local</span> curlen = <span class="number">0</span></div><div class="line">    <span class="keyword">while</span> j &lt;= strlne <span class="keyword">do</span></div><div class="line">        <span class="keyword">local</span> tmplen = <span class="built_in">string</span>.len(SubUTF8String(str, j))</div><div class="line">        <span class="keyword">if</span> tmplen ~= curlen <span class="keyword">then</span></div><div class="line">            count = count + <span class="number">1</span></div><div class="line">            chars[count] = <span class="built_in">string</span>.sub(str, i, j)</div><div class="line">            i = j + <span class="number">1</span></div><div class="line">            j = i</div><div class="line">        <span class="keyword">else</span></div><div class="line">            j = j + <span class="number">1</span></div><div class="line">        <span class="keyword">end</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">    <span class="keyword">return</span> chars</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<p>该方法通过以一个字节为步长不断尝试增加当前测试字符串的长度，判断是否可以取到更长的有效UTF-8子串，若能则把最近探测的1个或几个字节（[i,j]）作为一个有效字符输出到表中。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -153,7 +154,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://tumi.tech/2016/10/25/get-char-from-uft8string/" data-title="get_char_from_uft8string | tumi&#39;s blog" data-tsina="null" class="share clearfix">
+  <div data-url="http://tumi.tech/2016/10/25/get-char-from-uft8string/" data-title="Lua中处理含中文的UTF-8字符串 | tumi&#39;s blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
