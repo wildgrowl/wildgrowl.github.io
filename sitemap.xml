@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://tumi.tech/2016/10/25/get-char-from-uft8string/</loc>
+    
+    <lastmod>2016-10-25T11:16:11.640Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://tumi.tech/2016/09/09/introduction-of-looknfeel/</loc>
     
-    <lastmod>2016-09-09T06:12:03.263Z</lastmod>
+    <lastmod>2016-09-09T06:27:28.477Z</lastmod>
     
   </url>
   
