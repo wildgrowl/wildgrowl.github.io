@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://tumi.tech/"/>
-  <updated>2016-10-26T01:48:57.780Z</updated>
+  <updated>2016-10-26T02:59:54.829Z</updated>
   <id>http://tumi.tech/</id>
   
   <author>
@@ -16,13 +16,36 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title></title>
+    <link href="http://tumi.tech/2016/10/26/hexo-toc-optimize/"/>
+    <id>http://tumi.tech/2016/10/26/hexo-toc-optimize/</id>
+    <published>2016-10-26T02:47:37.732Z</published>
+    <updated>2016-10-26T02:59:54.829Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>Lua中的泛型迭代器</title>
     <link href="http://tumi.tech/2016/10/26/iterator-in-lua/"/>
     <id>http://tumi.tech/2016/10/26/iterator-in-lua/</id>
     <published>2016-10-26T01:37:37.000Z</published>
-    <updated>2016-10-26T01:48:57.780Z</updated>
+    <updated>2016-10-26T03:40:18.818Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="0-序"><a href="#0-序" class="headerlink" title="0. 序"></a>0. 序</h2><p>昨天同事碰到一个问题，因为游戏中进战斗要销毁一些窗口，他写了一对Reg/UnReg方法，在窗口创建和销毁时分别执行，在进入战斗时主控制程序只要遍历表中存的对象，并执行其EnterBattle()方法即可，这样写很好地做到了主程序与各个窗口实例之间的解耦。但是当有两个窗口要销毁时，却发现只能销毁一个。</p>
+<p>看到这个问题我立刻想到了C++的容器操作方法都会返回一个指向操作后容器end()的迭代器对象，因为操作会改变容器的结构，使原有的迭代器失效。</p>
+<h2 id="1-涉及的几个Lua方法"><a href="#1-涉及的几个Lua方法" class="headerlink" title="1. 涉及的几个Lua方法"></a>1. 涉及的几个Lua方法</h2><h3 id="1-pairs-table"><a href="#1-pairs-table" class="headerlink" title="1. pairs(table)"></a>1. pairs(table)</h3><p>pairs(有序有状态)会返回三个值，分别是迭代方法next,表t,和nil，而泛型for使用的便是前两个参数，这种遍历只适合于不更改表结构的情况。</p>
+<h3 id="2-table-insert-table-pos-value"><a href="#2-table-insert-table-pos-value" class="headerlink" title="2. table.insert(table, pos, value)"></a>2. table.insert(table, pos, value)</h3><p>默认的pos是n+1，如果指定了其他值，会移动pos右面的元素来为插入元素腾出空间。</p>
+<h3 id="3-table-remove-table-pos"><a href="#3-table-remove-table-pos" class="headerlink" title="3. table.remove(table, pos)"></a>3. table.remove(table, pos)</h3><p>在进战斗销毁窗口的例子中，遍历中会对被遍历的表执行table.remove()方法，该方法如果被删除的元素处于表头，会把表尾的元素向前移动，而一旦表结构更改后，原来的迭代器就失效了。</p>
+<h3 id="4-for-in-do-end"><a href="#4-for-in-do-end" class="headerlink" title="4. for  in   do   end"></a>4. for <var-list> in <exp-list>  do  <body> end</body></exp-list></var-list></h3>]]></content>
     
     <summary type="html">
+    
+      &lt;h2 id=&quot;0-序&quot;&gt;&lt;a href=&quot;#0-序&quot; class=&quot;headerlink&quot; title=&quot;0. 序&quot;&gt;&lt;/a&gt;0. 序&lt;/h2&gt;&lt;p&gt;昨天同事碰到一个问题，因为游戏中进战斗要销毁一些窗口，他写了一对Reg/UnReg方法，在窗口创建和销毁时分别执行，在进入战斗时
     
     </summary>
     

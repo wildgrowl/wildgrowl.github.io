@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://tumi.tech/2016/10/25/get-char-from-uft8string/</loc>
+    <loc>http://tumi.tech/2016/10/26/iterator-in-lua/</loc>
     
-    <lastmod>2016-10-26T02:40:25.515Z</lastmod>
+    <lastmod>2016-10-26T03:40:18.818Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://tumi.tech/2016/10/26/iterator-in-lua/</loc>
+    <loc>http://tumi.tech/2016/10/26/hexo-toc-optimize/</loc>
     
-    <lastmod>2016-10-26T01:48:57.780Z</lastmod>
+    <lastmod>2016-10-26T02:59:54.829Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://tumi.tech/2016/10/25/get-char-from-uft8string/</loc>
+    
+    <lastmod>2016-10-26T02:40:25.515Z</lastmod>
     
   </url>
   

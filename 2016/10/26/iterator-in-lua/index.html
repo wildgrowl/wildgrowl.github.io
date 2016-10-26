@@ -9,6 +9,8 @@
     
     <meta name="author" content="Charles Tumi">
     
+    <meta name="description" content="0. 序昨天同事碰到一个问题，因为游戏中进战斗要销毁一些窗口，他写了一对Reg/UnReg方法，在窗口创建和销毁时分别执行，在进入战斗时主控制程序只要遍历表中存的对象，并执行其EnterBattle()方法即可，这样写很好地做到了主程序与各个窗口实例之间的解耦。但是当有两个窗口要销毁时，却发现只能销">
+    
     
     
     
@@ -34,7 +36,7 @@
 				<h1 class="site-name"><a href="/" title="tumi&#39;s blog">tumi&#39;s blog</a></h1>
 				<h2 class="blog-motto">work for better games</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -52,7 +54,7 @@
 					
 					<form class="search" action="//baidu.com/s" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="text" id="search" name="wd" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="text" id="search" name="wd" autocomplete="off" maxlength="20" placeholder="搜索" />
                         <input name=tn type=hidden value="bds">
                         <input name=cl type=hidden value="3">
                         <input name=ct type=hidden value="2097152">
@@ -87,11 +89,16 @@
 		
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
-		
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-序"><span class="toc-text">0. 序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-涉及的几个Lua方法"><span class="toc-text">1. 涉及的几个Lua方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-pairs-table"><span class="toc-text">1. pairs(table)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-table-insert-table-pos-value"><span class="toc-text">2. table.insert(table, pos, value)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-table-remove-table-pos"><span class="toc-text">3. table.remove(table, pos)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-for-in-do-end"><span class="toc-text">4. for  in   do   end</span></a></li></ol></li></ol>
 		</div>
 		
-		  
+		<h2 id="0-序"><a href="#0-序" class="headerlink" title="0. 序"></a>0. 序</h2><p>昨天同事碰到一个问题，因为游戏中进战斗要销毁一些窗口，他写了一对Reg/UnReg方法，在窗口创建和销毁时分别执行，在进入战斗时主控制程序只要遍历表中存的对象，并执行其EnterBattle()方法即可，这样写很好地做到了主程序与各个窗口实例之间的解耦。但是当有两个窗口要销毁时，却发现只能销毁一个。</p>
+<p>看到这个问题我立刻想到了C++的容器操作方法都会返回一个指向操作后容器end()的迭代器对象，因为操作会改变容器的结构，使原有的迭代器失效。</p>
+<h2 id="1-涉及的几个Lua方法"><a href="#1-涉及的几个Lua方法" class="headerlink" title="1. 涉及的几个Lua方法"></a>1. 涉及的几个Lua方法</h2><h3 id="1-pairs-table"><a href="#1-pairs-table" class="headerlink" title="1. pairs(table)"></a>1. pairs(table)</h3><p>pairs(有序有状态)会返回三个值，分别是迭代方法next,表t,和nil，而泛型for使用的便是前两个参数，这种遍历只适合于不更改表结构的情况。</p>
+<h3 id="2-table-insert-table-pos-value"><a href="#2-table-insert-table-pos-value" class="headerlink" title="2. table.insert(table, pos, value)"></a>2. table.insert(table, pos, value)</h3><p>默认的pos是n+1，如果指定了其他值，会移动pos右面的元素来为插入元素腾出空间。</p>
+<h3 id="3-table-remove-table-pos"><a href="#3-table-remove-table-pos" class="headerlink" title="3. table.remove(table, pos)"></a>3. table.remove(table, pos)</h3><p>在进战斗销毁窗口的例子中，遍历中会对被遍历的表执行table.remove()方法，该方法如果被删除的元素处于表头，会把表尾的元素向前移动，而一旦表结构更改后，原来的迭代器就失效了。</p>
+<h3 id="4-for-in-do-end"><a href="#4-for-in-do-end" class="headerlink" title="4. for  in   do   end"></a>4. for <var-list> in <exp-list>  do  <body> end</body></exp-list></var-list></h3>  
 	</div>
 		<footer class="article-footer clearfix">
 
@@ -114,6 +121,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2016/10/26/hexo-toc-optimize/" title="">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  (no title)</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2016/10/25/get-char-from-uft8string/"  title="Lua中处理含中文的UTF-8字符串">
@@ -131,22 +146,22 @@
 </section>
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
-  
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-序"><span class="toc-number">1.</span> <span class="toc-text">0. 序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-涉及的几个Lua方法"><span class="toc-number">2.</span> <span class="toc-text">1. 涉及的几个Lua方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-pairs-table"><span class="toc-number">2.1.</span> <span class="toc-text">1. pairs(table)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-table-insert-table-pos-value"><span class="toc-number">2.2.</span> <span class="toc-text">2. table.insert(table, pos, value)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-table-remove-table-pos"><span class="toc-number">2.3.</span> <span class="toc-text">3. table.remove(table, pos)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-for-in-do-end"><span class="toc-number">2.4.</span> <span class="toc-text">4. for  in   do   end</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 
   
 <div class="tagslist">
-	<p class="asidetitle">Tags</p>
+	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
 		
 			<li><a href="/tags/CEGUI/" title="CEGUI">CEGUI<sup>1</sup></a></li>
