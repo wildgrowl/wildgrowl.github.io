@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://tumi.tech/"/>
-  <updated>2016-10-26T02:59:54.829Z</updated>
+  <updated>2016-10-26T08:34:29.326Z</updated>
   <id>http://tumi.tech/</id>
   
   <author>
@@ -16,16 +16,28 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title></title>
+    <title>Hexo TOC 优化</title>
     <link href="http://tumi.tech/2016/10/26/hexo-toc-optimize/"/>
     <id>http://tumi.tech/2016/10/26/hexo-toc-optimize/</id>
-    <published>2016-10-26T02:47:37.732Z</published>
-    <updated>2016-10-26T02:59:54.829Z</updated>
+    <published>2016-10-26T02:47:37.000Z</published>
+    <updated>2016-10-26T08:34:29.326Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>参考资料：<a href="http://blog.csdn.net/peihaozhu/article/details/50755098" target="_blank" rel="external">http://blog.csdn.net/peihaozhu/article/details/50755098</a></p>
+</blockquote>
+<h2 id="0-序"><a href="#0-序" class="headerlink" title="0. 序"></a>0. 序</h2><p>之前发博客时目录就没处理好，因为Hexo的Iceman主题下Markdown的TOC标签未能识别，而当使用恰当标签时（<code>#</code>文章中只有一个），Hexo又能够为我自动生成目录，但该目录带有自动编号，与我自己的标题编号不一致又连在一起，看上去很不爽，所以当时就没用。</p>
+<p>今天找到了<a href="http://blog.csdn.net/peihaozhu/article/details/50755098" target="_blank" rel="external">参考资料</a>这篇文章，在Iceman主题下的<code>/layout/_partial/post/article.ejs</code>中的div设置中增加一个参数<code>{list_number:false}</code>即可。此外还可以进一步对toc的布局优化美观，详见参考文章。</p>
+]]></content>
     
     <summary type="html">
     
+      &lt;blockquote&gt;
+&lt;p&gt;参考资料：&lt;a href=&quot;http://blog.csdn.net/peihaozhu/article/details/50755098&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.csdn.net/p
+    
     </summary>
     
+    
+      <category term="web" scheme="http://tumi.tech/tags/web/"/>
     
   </entry>
   

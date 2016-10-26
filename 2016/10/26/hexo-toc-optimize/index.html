@@ -4,10 +4,14 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>tumi&#39;s blog</title>
+    <title>Hexo TOC 优化 | tumi&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="Charles Tumi">
+    
+    <meta name="description" content="参考资料：http://blog.csdn.net/peihaozhu/article/details/50755098
+
+0. 序之前发博客时目录就没处理好，因为Hexo的Iceman主题下Markdown的TOC标签未能识别，而当使用恰当标签时（#文章中只有一个），Hexo又能够为我自动生成目录">
     
     
     
@@ -34,7 +38,7 @@
 				<h1 class="site-name"><a href="/" title="tumi&#39;s blog">tumi&#39;s blog</a></h1>
 				<h2 class="blog-motto">work for better games</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -52,7 +56,7 @@
 					
 					<form class="search" action="//baidu.com/s" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="text" id="search" name="wd" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="text" id="search" name="wd" autocomplete="off" maxlength="20" placeholder="Search" />
                         <input name=tn type=hidden value="bds">
                         <input name=cl type=hidden value="3">
                         <input name=ct type=hidden value="2097152">
@@ -71,14 +75,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/10/26/hexo-toc-optimize/" title="" itemprop="url"></a>
+      <a href="/2016/10/26/hexo-toc-optimize/" title="Hexo TOC 优化" itemprop="url">Hexo TOC 优化</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://tumi.tech" title="Charles Tumi">Charles Tumi</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-10-26T02:47:37.732Z" itemprop="datePublished">2016-10-26</time>
+    <time datetime="2016-10-26T02:47:37.000Z" itemprop="datePublished">2016-10-26</time>
     
   </p>
 </header>
@@ -87,20 +91,30 @@
 		
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-序"><span class="toc-text">0. 序</span></a></li></ol>
 		</div>
 		
-		  
+		<blockquote>
+<p>参考资料：<a href="http://blog.csdn.net/peihaozhu/article/details/50755098" target="_blank" rel="external">http://blog.csdn.net/peihaozhu/article/details/50755098</a></p>
+</blockquote>
+<h2 id="0-序"><a href="#0-序" class="headerlink" title="0. 序"></a>0. 序</h2><p>之前发博客时目录就没处理好，因为Hexo的Iceman主题下Markdown的TOC标签未能识别，而当使用恰当标签时（<code>#</code>文章中只有一个），Hexo又能够为我自动生成目录，但该目录带有自动编号，与我自己的标题编号不一致又连在一起，看上去很不爽，所以当时就没用。</p>
+<p>今天找到了<a href="http://blog.csdn.net/peihaozhu/article/details/50755098" target="_blank" rel="external">参考资料</a>这篇文章，在Iceman主题下的<code>/layout/_partial/post/article.ejs</code>中的div设置中增加一个参数<code>{list_number:false}</code>即可。此外还可以进一步对toc的布局优化美观，详见参考文章。</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/web/">web</a>
+  </div>
 
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://tumi.tech/2016/10/26/hexo-toc-optimize/" data-title="tumi&#39;s blog" data-tsina="null" class="share clearfix">
+  <div data-url="http://tumi.tech/2016/10/26/hexo-toc-optimize/" data-title="Hexo TOC 优化 | tumi&#39;s blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -126,22 +140,22 @@
 </section>
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
-  
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-序"><span class="toc-number">1.</span> <span class="toc-text">0. 序</span></a></li></ol>
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			<li><a href="/tags/CEGUI/" title="CEGUI">CEGUI<sup>1</sup></a></li>
@@ -149,6 +163,8 @@
 			<li><a href="/tags/Lua/" title="Lua">Lua<sup>2</sup></a></li>
 		
 			<li><a href="/tags/Others/" title="Others">Others<sup>1</sup></a></li>
+		
+			<li><a href="/tags/web/" title="web">web<sup>1</sup></a></li>
 		
 		</ul>
 </div>
