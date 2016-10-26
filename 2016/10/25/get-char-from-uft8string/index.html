@@ -9,9 +9,10 @@
     
     <meta name="author" content="Charles Tumi">
     
-    <meta name="description" content="参考资料：http://blog.csdn.net/zhang429350061/article/details/41825521http://www.cnblogs.com/atong/p/3366682.html
+    <meta name="description" content="Lua中处理含中文的UTF-8字符串
+参考资料：http://blog.csdn.net/zhang429350061/article/details/41825521http://www.cnblogs.com/atong/p/3366682.html
 
-最近做功能时有一个需求，界面要用一个控件显示文本，内容是服务器发来的，是玩家的留">
+0. 序最近做功能时有一个需求，界面要用一">
     
     
     
@@ -38,7 +39,7 @@
 				<h1 class="site-name"><a href="/" title="tumi&#39;s blog">tumi&#39;s blog</a></h1>
 				<h2 class="blog-motto">work for better games</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -56,7 +57,7 @@
 					
 					<form class="search" action="//baidu.com/s" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="text" id="search" name="wd" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="text" id="search" name="wd" autocomplete="off" maxlength="20" placeholder="搜索" />
                         <input name=tn type=hidden value="bds">
                         <input name=cl type=hidden value="3">
                         <input name=ct type=hidden value="2097152">
@@ -91,17 +92,18 @@
 		
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-UTF8编码结构"><span class="toc-number">1.</span> <span class="toc-text">1. UTF8编码结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-UTF-8字符串截取算法"><span class="toc-number">2.</span> <span class="toc-text">2. UTF-8字符串截取算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-从UTF-8字符串得到全部有效字符"><span class="toc-number">3.</span> <span class="toc-text">3. 从UTF_8字符串得到全部有效字符</span></a></li></ol>
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Lua中处理含中文的UTF-8字符串"><span class="toc-number">1.</span> <span class="toc-text">Lua中处理含中文的UTF-8字符串</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-序"><span class="toc-number">1.1.</span> <span class="toc-text">0. 序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-UTF8编码结构"><span class="toc-number">1.2.</span> <span class="toc-text">1. UTF8编码结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-UTF-8字符串截取算法"><span class="toc-number">1.3.</span> <span class="toc-text">2. UTF-8字符串截取算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-从UTF-8字符串得到全部有效字符"><span class="toc-number">1.4.</span> <span class="toc-text">3. 从UTF_8字符串得到全部有效字符</span></a></li></ol></li></ol>
 		</div>
 		
-		<blockquote>
+		<h1 id="Lua中处理含中文的UTF-8字符串"><a href="#Lua中处理含中文的UTF-8字符串" class="headerlink" title="Lua中处理含中文的UTF-8字符串"></a>Lua中处理含中文的UTF-8字符串</h1><blockquote>
 <p>参考资料：<br><a href="http://blog.csdn.net/zhang429350061/article/details/41825521" target="_blank" rel="external">http://blog.csdn.net/zhang429350061/article/details/41825521</a><br><a href="http://www.cnblogs.com/atong/p/3366682.html" target="_blank" rel="external">http://www.cnblogs.com/atong/p/3366682.html</a></p>
 </blockquote>
-<p>最近做功能时有一个需求，界面要用一个控件显示文本，内容是服务器发来的，是玩家的留言，而该控件只是一个预览，因此最大长度有限制，若超出限制则在最后以”…”结尾。  </p>
+<h2 id="0-序"><a href="#0-序" class="headerlink" title="0. 序"></a>0. 序</h2><p>最近做功能时有一个需求，界面要用一个控件显示文本，内容是服务器发来的，是玩家的留言，而该控件只是一个预览，因此最大长度有限制，若超出限制则在最后以”…”结尾。  </p>
 <p>起初文本控件用的是StaticText，但是翻了下CEGUI文档，这个控件太弱了，就只有defaultWindow的基本功能，后来换到RichEditBox，基准实现中是有描述绘制的文本矩形的宽高的变量的，这样就可以把文本内容的字数和屏幕显示联系起来了。那么问题来了，如何对字符串进行分割呢？  </p>
 <p>RichEditBox的第一个参数是用一个合法的UTF8字符串作为参数调用CEGUI.String的构造函数，参数的合法性必须由程序员来保证，起初想通过Lua的pcall方法来捕获异常，但遗憾的改构造函数是C++的，Lua已经无能为力了，因此必须对字符串进行合理分割，于是有了本文。</p>
-<h1 id="1-UTF8编码结构"><a href="#1-UTF8编码结构" class="headerlink" title="1. UTF8编码结构"></a>1. UTF8编码结构</h1><p>UTF-8的编码规则很简单，只有二条：</p>
+<p><strong>目录</strong><br>[TOC]</p>
+<h2 id="1-UTF8编码结构"><a href="#1-UTF8编码结构" class="headerlink" title="1. UTF8编码结构"></a>1. UTF8编码结构</h2><p>UTF-8的编码规则很简单，只有二条：</p>
 <p>1）对于单字节的符号，字节的第一位设为0，后面7位为这个符号的unicode码。因此对于英语字母，UTF-8编码和ASCII码是相同的。</p>
 <p>2）对于n字节的符号（n&gt;1），第一个字节的前n位都设为1，第n+1位设为0，后面字节的前两位一律设为10。剩下的没有提及的二进制位，全部为这个符号的unicode码。</p>
 <p>下表总结了编码规则，字母x表示可用编码的位。</p>
@@ -132,12 +134,12 @@
 </tbody>
 </table>
 <p>此外，有一个概念很重要，即UTF-8是单字节码，多字节存储，而非多字节码。这个概念告诉我们它是大小端无关的！这也保证了其在各平台的通用性。</p>
-<h1 id="2-UTF-8字符串截取算法"><a href="#2-UTF-8字符串截取算法" class="headerlink" title="2. UTF-8字符串截取算法"></a>2. UTF-8字符串截取算法</h1><p>该算法是从参考文献1看到的，先上代码。</p>
+<h2 id="2-UTF-8字符串截取算法"><a href="#2-UTF-8字符串截取算法" class="headerlink" title="2. UTF-8字符串截取算法"></a>2. UTF-8字符串截取算法</h2><p>该算法是从参考文献1看到的，先上代码。</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubUTF8String</span><span class="params">(s,n)</span></span></div><div class="line">    <span class="keyword">local</span> dropping = <span class="built_in">string</span>.byte(s, n + <span class="number">1</span>)   <span class="comment">-- 若当截取长度下一位字符是正常字符(&lt;128)或是多字节字符的开始(&gt;192)的话，</span></div><div class="line">                                             <span class="comment">-- 或是有效字符串的最后一个字符，则直接返回该长度的字符串</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> dropping <span class="keyword">then</span> <span class="keyword">return</span> s <span class="keyword">end</span>        <span class="comment">-- 字符串结尾的情况返回</span></div><div class="line">    <span class="keyword">if</span> dropping &gt;= <span class="number">128</span> <span class="keyword">and</span> dropping &lt; <span class="number">192</span> <span class="keyword">then</span></div><div class="line">        <span class="keyword">return</span> SubUTF8String(s, n - <span class="number">1</span>)       <span class="comment">-- 若不是正常字符也不是多字节码的开始则向前探测</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">    <span class="keyword">return</span> <span class="built_in">string</span>.sub(s, <span class="number">1</span>, n)</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
 <p>首先该方法也要求我们的输入必须是有效的UTF8字符串（在我们的项目中这是自然满足的），第二个参数n是要截取的长度（字节长度）。</p>
 <p>在了解了UTF-8的结构后，对128和192这两个数字就不难理解了。若上面的if语句条件满足，则说明该字节所表示的字符是UTF-8中间的某个字节，需要向前探测。</p>
 <p>这个算法的好在于它是一个正确的尾调用（Tail return），虽然其样子与递归十分相似，但它不是递归的。尾调用的英文名称很好的描述了其特征，即对另一个函数的调用是紧跟在return后面的。就我目前的理解来看，尾调用的效率是介于递归和loop之间的，递归的开销主要在维护栈状态和函数调用开销，而尾调用避免了前者，无须担心栈溢出。</p>
-<h1 id="3-从UTF-8字符串得到全部有效字符"><a href="#3-从UTF-8字符串得到全部有效字符" class="headerlink" title="3. 从UTF_8字符串得到全部有效字符"></a>3. 从UTF_8字符串得到全部有效字符</h1><p>该算法在上述截取算法的基础上，把字符串中的全部字符分别拿出存到表中，表长即可显字符的个数。</p>
+<h2 id="3-从UTF-8字符串得到全部有效字符"><a href="#3-从UTF-8字符串得到全部有效字符" class="headerlink" title="3. 从UTF_8字符串得到全部有效字符"></a>3. 从UTF_8字符串得到全部有效字符</h2><p>该算法在上述截取算法的基础上，把字符串中的全部字符分别拿出存到表中，表长即可显字符的个数。</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">GetValidChar</span><span class="params">(str)</span></span></div><div class="line">    <span class="keyword">local</span> chars = &#123;&#125;</div><div class="line">    <span class="keyword">local</span> count = <span class="number">0</span></div><div class="line">    <span class="keyword">local</span> i = <span class="number">1</span></div><div class="line">    <span class="keyword">local</span> j = <span class="number">1</span></div><div class="line">    <span class="keyword">local</span> strlen = <span class="built_in">string</span>.len(str)</div><div class="line">    <span class="keyword">local</span> curlen = <span class="number">0</span></div><div class="line">    <span class="keyword">while</span> j &lt;= strlne <span class="keyword">do</span></div><div class="line">        <span class="keyword">local</span> tmplen = <span class="built_in">string</span>.len(SubUTF8String(str, j))</div><div class="line">        <span class="keyword">if</span> tmplen ~= curlen <span class="keyword">then</span></div><div class="line">            count = count + <span class="number">1</span></div><div class="line">            chars[count] = <span class="built_in">string</span>.sub(str, i, j)</div><div class="line">            i = j + <span class="number">1</span></div><div class="line">            j = i</div><div class="line">        <span class="keyword">else</span></div><div class="line">            j = j + <span class="number">1</span></div><div class="line">        <span class="keyword">end</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">    <span class="keyword">return</span> chars</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
 <p>该方法通过以一个字节为步长不断尝试增加当前测试字符串的长度，判断是否可以取到更长的有效UTF-8子串，若能则把最近探测的1个或几个字节（[i,j]）作为一个有效字符输出到表中。</p>
   
@@ -163,6 +165,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2016/10/26/iterator-in-lua/" title="iterator_in_lua">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  iterator_in_lua</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2016/09/09/introduction-of-looknfeel/"  title="looknfeel简介">
@@ -180,22 +190,22 @@
 </section>
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-UTF8编码结构"><span class="toc-number">1.</span> <span class="toc-text">1. UTF8编码结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-UTF-8字符串截取算法"><span class="toc-number">2.</span> <span class="toc-text">2. UTF-8字符串截取算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-从UTF-8字符串得到全部有效字符"><span class="toc-number">3.</span> <span class="toc-text">3. 从UTF_8字符串得到全部有效字符</span></a></li></ol>
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Lua中处理含中文的UTF-8字符串"><span class="toc-number">1.</span> <span class="toc-text">Lua中处理含中文的UTF-8字符串</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-序"><span class="toc-number">1.1.</span> <span class="toc-text">0. 序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-UTF8编码结构"><span class="toc-number">1.2.</span> <span class="toc-text">1. UTF8编码结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-UTF-8字符串截取算法"><span class="toc-number">1.3.</span> <span class="toc-text">2. UTF-8字符串截取算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-从UTF-8字符串得到全部有效字符"><span class="toc-number">1.4.</span> <span class="toc-text">3. 从UTF_8字符串得到全部有效字符</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 
   
 <div class="tagslist">
-	<p class="asidetitle">Tags</p>
+	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
 		
 			<li><a href="/tags/CEGUI/" title="CEGUI">CEGUI<sup>1</sup></a></li>
