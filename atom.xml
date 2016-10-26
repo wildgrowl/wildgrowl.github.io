@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://tumi.tech/"/>
-  <updated>2016-10-26T01:37:37.704Z</updated>
+  <updated>2016-10-26T01:48:57.780Z</updated>
   <id>http://tumi.tech/</id>
   
   <author>
@@ -16,16 +16,18 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>iterator_in_lua</title>
+    <title>Lua中的泛型迭代器</title>
     <link href="http://tumi.tech/2016/10/26/iterator-in-lua/"/>
     <id>http://tumi.tech/2016/10/26/iterator-in-lua/</id>
     <published>2016-10-26T01:37:37.000Z</published>
-    <updated>2016-10-26T01:37:37.704Z</updated>
+    <updated>2016-10-26T01:48:57.780Z</updated>
     
     <summary type="html">
     
     </summary>
     
+    
+      <category term="Lua" scheme="http://tumi.tech/tags/Lua/"/>
     
   </entry>
   
@@ -34,15 +36,14 @@
     <link href="http://tumi.tech/2016/10/25/get-char-from-uft8string/"/>
     <id>http://tumi.tech/2016/10/25/get-char-from-uft8string/</id>
     <published>2016-10-25T10:29:28.000Z</published>
-    <updated>2016-10-26T01:46:16.354Z</updated>
+    <updated>2016-10-26T02:40:25.515Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="Lua中处理含中文的UTF-8字符串"><a href="#Lua中处理含中文的UTF-8字符串" class="headerlink" title="Lua中处理含中文的UTF-8字符串"></a>Lua中处理含中文的UTF-8字符串</h1><blockquote>
+    <content type="html"><![CDATA[<blockquote>
 <p>参考资料：<br><a href="http://blog.csdn.net/zhang429350061/article/details/41825521" target="_blank" rel="external">http://blog.csdn.net/zhang429350061/article/details/41825521</a><br><a href="http://www.cnblogs.com/atong/p/3366682.html" target="_blank" rel="external">http://www.cnblogs.com/atong/p/3366682.html</a></p>
 </blockquote>
 <h2 id="0-序"><a href="#0-序" class="headerlink" title="0. 序"></a>0. 序</h2><p>最近做功能时有一个需求，界面要用一个控件显示文本，内容是服务器发来的，是玩家的留言，而该控件只是一个预览，因此最大长度有限制，若超出限制则在最后以”…”结尾。  </p>
 <p>起初文本控件用的是StaticText，但是翻了下CEGUI文档，这个控件太弱了，就只有defaultWindow的基本功能，后来换到RichEditBox，基准实现中是有描述绘制的文本矩形的宽高的变量的，这样就可以把文本内容的字数和屏幕显示联系起来了。那么问题来了，如何对字符串进行分割呢？  </p>
 <p>RichEditBox的第一个参数是用一个合法的UTF8字符串作为参数调用CEGUI.String的构造函数，参数的合法性必须由程序员来保证，起初想通过Lua的pcall方法来捕获异常，但遗憾的改构造函数是C++的，Lua已经无能为力了，因此必须对字符串进行合理分割，于是有了本文。</p>
-<p><strong>目录</strong><br>[TOC]</p>
 <h2 id="1-UTF8编码结构"><a href="#1-UTF8编码结构" class="headerlink" title="1. UTF8编码结构"></a>1. UTF8编码结构</h2><p>UTF-8的编码规则很简单，只有二条：</p>
 <p>1）对于单字节的符号，字节的第一位设为0，后面7位为这个符号的unicode码。因此对于英语字母，UTF-8编码和ASCII码是相同的。</p>
 <p>2）对于n字节的符号（n&gt;1），第一个字节的前n位都设为1，第n+1位设为0，后面字节的前两位一律设为10。剩下的没有提及的二进制位，全部为这个符号的unicode码。</p>
@@ -86,7 +87,8 @@
     
     <summary type="html">
     
-      &lt;h1 id=&quot;Lua中处理含中文的UTF-8字符串&quot;&gt;&lt;a href=&quot;#Lua中处理含中文的UTF-8字符串&quot; class=&quot;headerlink&quot; title=&quot;Lua中处理含中文的UTF-8字符串&quot;&gt;&lt;/a&gt;Lua中处理含中文的UTF-8字符串&lt;/h1&gt;&lt;blockquo
+      &lt;blockquote&gt;
+&lt;p&gt;参考资料：&lt;br&gt;&lt;a href=&quot;http://blog.csdn.net/zhang429350061/article/details/41825521&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.c
     
     </summary>
     
