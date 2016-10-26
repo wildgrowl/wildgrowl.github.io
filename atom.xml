@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://tumi.tech/"/>
-  <updated>2016-10-26T08:36:13.752Z</updated>
+  <updated>2016-10-26T08:38:05.543Z</updated>
   <id>http://tumi.tech/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hexo TOC 优化[转]</title>
+    <title>Hexo TOC 优化</title>
     <link href="http://tumi.tech/2016/10/26/hexo-toc-optimize/"/>
     <id>http://tumi.tech/2016/10/26/hexo-toc-optimize/</id>
     <published>2016-10-26T02:47:37.000Z</published>
-    <updated>2016-10-26T08:36:13.752Z</updated>
+    <updated>2016-10-26T08:38:05.543Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>参考资料：<a href="http://blog.csdn.net/peihaozhu/article/details/50755098" target="_blank" rel="external">http://blog.csdn.net/peihaozhu/article/details/50755098</a></p>
