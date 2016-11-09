@@ -204,10 +204,10 @@ ga('send', 'pageview');
 
 <!--page counter part-->
 <script>
-function addCount (Counter) {
+function addCount (Counter1) {
         url=$('.article-date').attr('href').trim();
         title = $('.article-title').text().trim();
-        var query=new AV.Query(Counter);
+        var query=new AV.Query(Counter1);
         //use url as unique idnetfication
         query.equalTo("url",url);
         query.find({
@@ -221,7 +221,7 @@ function addCount (Counter) {
                 }
                 else
                 {
-                    var newcounter=new Counter();
+                    var newcounter=new Counter1();
                     newcounter.set("title",title);
                     newcounter.set("url",url);
                     newcounter.set("time",1);
@@ -242,11 +242,11 @@ function addCount (Counter) {
         });
 }
 $(function(){
-        var Counter=AV.Object.extend("Counter");
+        var Counter1=AV.Object.extend("Counter1");
         //only increse visit counting when intering a page
         if ($('.article-title').length == 1)
-           addCount(Counter);
-        var query=new AV.Query(Counter);
+           addCount(Counter1);
+        var query=new AV.Query(Counter1);
         query.descending("time");
         // the sum of popular posts
         query.limit(10); 
