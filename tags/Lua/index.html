@@ -38,7 +38,7 @@
 				<h1 class="site-name"><a href="/" title="tumi&#39;s blog">tumi&#39;s blog</a></h1>
 				<h2 class="blog-motto">work for better games</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -56,7 +56,7 @@
 					
 					<form class="search" action="//baidu.com/s" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="text" id="search" name="wd" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="text" id="search" name="wd" autocomplete="off" maxlength="20" placeholder="Search" />
                         <input name=tn type=hidden value="bds">
                         <input name=cl type=hidden value="3">
                         <input name=ct type=hidden value="2097152">
@@ -188,12 +188,11 @@ ga('send', 'pageview');
 
 
 
-<!--page counter part-->
 <script>
-function addCount (Counter1) {
+function addCount (Counter) {
         url=$('.article-date').attr('href').trim();
         title = $('.article-title').text().trim();
-        var query=new AV.Query(Counter1);
+        var query=new AV.Query(Counter);
         //use url as unique idnetfication
         query.equalTo("url",url);
         query.find({
@@ -207,7 +206,7 @@ function addCount (Counter1) {
                 }
                 else
                 {
-                    var newcounter=new Counter1();
+                    var newcounter=new Counter();
                     newcounter.set("title",title);
                     newcounter.set("url",url);
                     newcounter.set("time",1);
@@ -228,11 +227,11 @@ function addCount (Counter1) {
         });
 }
 $(function(){
-        var Counter1=AV.Object.extend("Counter1");
+        var Counter=AV.Object.extend("Counter");
         //only increse visit counting when intering a page
         if ($('.article-title').length == 1)
-           addCount(Counter1);
-        var query=new AV.Query(Counter1);
+           addCount(Counter);
+        var query=new AV.Query(Counter);
         query.descending("time");
         // the sum of popular posts
         query.limit(10); 
@@ -256,7 +255,7 @@ $(function(){
             }
         )
         });
-</script>
+</script
     </body>
    </html>
 
