@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://tumi.tech/categories/index.html</loc>
+    
+    <lastmod>2016-11-10T09:20:35.684Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://tumi.tech/tags/index.html</loc>
+    
+    <lastmod>2016-11-10T09:20:00.588Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://tumi.tech/2016/10/26/hexo-toc-optimize/</loc>
     
     <lastmod>2016-10-26T08:38:05.543Z</lastmod>
