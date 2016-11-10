@@ -1,423 +1,407 @@
-
- <!DOCTYPE HTML>
-<html >
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   
-    <title>Lua中的泛型迭代器 | tumi&#39;s blog</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
-    
-    <meta name="author" content="Charles Tumi">
-    
-    <meta name="description" content="0. 序昨天同事碰到一个问题，因为游戏中进战斗要销毁一些窗口，他写了一对Reg/UnReg方法，在窗口创建和销毁时分别执行，在进入战斗时主控制程序只要遍历表中存的对象，并执行其EnterBattle()方法即可，这样写很好地做到了主程序与各个窗口实例之间的解耦。但是当有两个窗口要销毁时，却发现只能销">
-    
-    
-    
-    
-    
-    <link rel="icon" href="/img/favicon.ico">
-    
-    
-    <link rel="apple-touch-icon" href="/img/pacman.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="https://cdn1.lncld.net/static/js/av-min-1.5.0.js"></script>
-    <script>AV.initialize("SHdiIBOW3278D2VbP23Hkq1I-gzGzoHsz", "7m9p5JrpDTrf7oM943m43sU8");</script>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="http://tumi.tech">
+  <title>Lua中的泛型迭代器 | tumi&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="0. 序昨天同事碰到一个问题，因为游戏中进战斗要销毁一些窗口，他写了一对Reg/UnReg方法，在窗口创建和销毁时分别执行，在进入战斗时主控制程序只要遍历表中存的对象，并执行其EnterBattle()方法即可，这样写很好地做到了主程序与各个窗口实例之间的解耦。但是当有两个窗口要销毁时，却发现只能销毁一个。
+看到这个问题我立刻想到了C++的容器操作方法都会返回一个指向操作后容器end()的迭代器对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lua中的泛型迭代器">
+<meta property="og:url" content="http://tumi.tech/2016/10/26/iterator-in-lua/index.html">
+<meta property="og:site_name" content="tumi's blog">
+<meta property="og:description" content="0. 序昨天同事碰到一个问题，因为游戏中进战斗要销毁一些窗口，他写了一对Reg/UnReg方法，在窗口创建和销毁时分别执行，在进入战斗时主控制程序只要遍历表中存的对象，并执行其EnterBattle()方法即可，这样写很好地做到了主程序与各个窗口实例之间的解耦。但是当有两个窗口要销毁时，却发现只能销毁一个。
+看到这个问题我立刻想到了C++的容器操作方法都会返回一个指向操作后容器end()的迭代器对">
+<meta property="og:updated_time" content="2016-10-26T03:40:18.818Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lua中的泛型迭代器">
+<meta name="twitter:description" content="0. 序昨天同事碰到一个问题，因为游戏中进战斗要销毁一些窗口，他写了一对Reg/UnReg方法，在窗口创建和销毁时分别执行，在进入战斗时主控制程序只要遍历表中存的对象，并执行其EnterBattle()方法即可，这样写很好地做到了主程序与各个窗口实例之间的解耦。但是当有两个窗口要销毁时，却发现只能销毁一个。
+看到这个问题我立刻想到了C++的容器操作方法都会返回一个指向操作后容器end()的迭代器对">
+  
+    <link rel="alternative" href="/atom.xml" title="tumi&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
 </head>
 
-  <body>
-    <header>
-      <div>
-		
-			<div id="imglogo">
-				<a href="/"><img src="/img/logo.svg" alt="tumi&#39;s blog" title="tumi&#39;s blog"/></a>
-			</div>
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
 			
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="tumi&#39;s blog">tumi&#39;s blog</a></h1>
-				<h2 class="blog-motto">work for better games</h2>
+			<img src="null" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Charles Tumi</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">work for better games</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/tags/随笔">随笔</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="#" title="github">github</a>
+		        
+					<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+		        
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+					<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+		        
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">Home</a></li>
-					
-						<li><a href="/archives">Archives</a></li>
-					
-						<li><a href="/atom.xml">Rss</a></li>
-					
-						<li><a href="/sitemap.xml">Sitemap</a></li>
-					
-					<li>
-					
-					<form class="search" action="//baidu.com/s" method="get" accept-charset="utf-8">
-						<label>Search</label>
-						<input type="text" id="search" name="wd" autocomplete="off" maxlength="20" placeholder="搜索" />
-                        <input name=tn type=hidden value="bds">
-                        <input name=cl type=hidden value="3">
-                        <input name=ct type=hidden value="2097152">
-						<input type="hidden" name="si" value="tumi.tech">
-					</form>
-					
-					</li>
-				</ul>
-			</nav>			
+		</nav>
+	</header>		
 </div>
 
-    </header>
-    <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/10/26/iterator-in-lua/" title="Lua中的泛型迭代器" itemprop="url">Lua中的泛型迭代器</a>
-  </h1>
-  <p class="article-author">By
-    
-      <a href="http://tumi.tech" title="Charles Tumi">Charles Tumi</a>
-    </p>
-  <p class="article-time">
-    <time datetime="2016-10-26T01:37:37.000Z" itemprop="datePublished">2016-10-26</time>
-    
-  </p>
-</header>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">Charles Tumi</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="null" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Charles Tumi</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">work for better games</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/tags/随笔">随笔</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
 
-	<div class="article-content">
-		
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-序"><span class="toc-text">0. 序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-涉及的几个Lua方法"><span class="toc-text">1. 涉及的几个Lua方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-pairs-table"><span class="toc-text">1. pairs(table)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-table-insert-table-pos-value"><span class="toc-text">2. table.insert(table, pos, value)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-table-remove-table-pos"><span class="toc-text">3. table.remove(table, pos)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-for-in-do-end"><span class="toc-text">4. for  in   do   end</span></a></li></ol></li></ol>
-		</div>
-		
-		<h2 id="0-序"><a href="#0-序" class="headerlink" title="0. 序"></a>0. 序</h2><p>昨天同事碰到一个问题，因为游戏中进战斗要销毁一些窗口，他写了一对Reg/UnReg方法，在窗口创建和销毁时分别执行，在进入战斗时主控制程序只要遍历表中存的对象，并执行其EnterBattle()方法即可，这样写很好地做到了主程序与各个窗口实例之间的解耦。但是当有两个窗口要销毁时，却发现只能销毁一个。</p>
+      <div class="body-wrap">
+        <article id="post-iterator-in-lua" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Lua中的泛型迭代器
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="0-序"><a href="#0-序" class="headerlink" title="0. 序"></a>0. 序</h2><p>昨天同事碰到一个问题，因为游戏中进战斗要销毁一些窗口，他写了一对Reg/UnReg方法，在窗口创建和销毁时分别执行，在进入战斗时主控制程序只要遍历表中存的对象，并执行其EnterBattle()方法即可，这样写很好地做到了主程序与各个窗口实例之间的解耦。但是当有两个窗口要销毁时，却发现只能销毁一个。</p>
 <p>看到这个问题我立刻想到了C++的容器操作方法都会返回一个指向操作后容器end()的迭代器对象，因为操作会改变容器的结构，使原有的迭代器失效。</p>
 <h2 id="1-涉及的几个Lua方法"><a href="#1-涉及的几个Lua方法" class="headerlink" title="1. 涉及的几个Lua方法"></a>1. 涉及的几个Lua方法</h2><h3 id="1-pairs-table"><a href="#1-pairs-table" class="headerlink" title="1. pairs(table)"></a>1. pairs(table)</h3><p>pairs(有序有状态)会返回三个值，分别是迭代方法next,表t,和nil，而泛型for使用的便是前两个参数，这种遍历只适合于不更改表结构的情况。</p>
 <h3 id="2-table-insert-table-pos-value"><a href="#2-table-insert-table-pos-value" class="headerlink" title="2. table.insert(table, pos, value)"></a>2. table.insert(table, pos, value)</h3><p>默认的pos是n+1，如果指定了其他值，会移动pos右面的元素来为插入元素腾出空间。</p>
 <h3 id="3-table-remove-table-pos"><a href="#3-table-remove-table-pos" class="headerlink" title="3. table.remove(table, pos)"></a>3. table.remove(table, pos)</h3><p>在进战斗销毁窗口的例子中，遍历中会对被遍历的表执行table.remove()方法，该方法如果被删除的元素处于表头，会把表尾的元素向前移动，而一旦表结构更改后，原来的迭代器就失效了。</p>
-<h3 id="4-for-in-do-end"><a href="#4-for-in-do-end" class="headerlink" title="4. for  in   do   end"></a>4. for <var-list> in <exp-list>  do  <body> end</body></exp-list></var-list></h3>  
+<h3 id="4-for-in-do-end"><a href="#4-for-in-do-end" class="headerlink" title="4. for  in   do   end"></a>4. for <var-list> in <exp-list>  do  <body> end</body></exp-list></var-list></h3>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/10/26/iterator-in-lua/" class="archive-article-date">
+  	<time datetime="2016-10-26T01:37:37.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-10-26</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Lua/">Lua</a></li></ul>
 	</div>
-		<footer class="article-footer clearfix">
 
-  <div class="article-tags">
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
   
-  <span></span> <a href="/tags/Lua/">Lua</a>
-  </div>
-
-
-
-
-<div class="article-share" id="share">
-
-  <div data-url="http://tumi.tech/2016/10/26/iterator-in-lua/" data-title="Lua中的泛型迭代器 | tumi&#39;s blog" data-tsina="null" class="share clearfix">
-  </div>
-
-</div>
-</footer>   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2016/10/26/hexo-toc-optimize/" title="Hexo TOC 优化">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  Hexo TOC 优化</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2016/10/25/get-char-from-uft8string/"  title="Lua中处理含中文的UTF-8字符串">
- <strong>NEXT:</strong><br/> 
- <span>Lua中处理含中文的UTF-8字符串
-</span>
-</a>
-</div>
-
+<nav id="article-nav">
+  
+    <a href="/2016/10/26/hexo-toc-optimize/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Hexo TOC 优化
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/10/25/get-char-from-uft8string/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Lua中处理含中文的UTF-8字符串</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
 </nav>
 
-	
-<section class="comment">
-	<div class="ds-thread"></div>
-</section>
 
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-序"><span class="toc-number">1.</span> <span class="toc-text">0. 序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-涉及的几个Lua方法"><span class="toc-number">2.</span> <span class="toc-text">1. 涉及的几个Lua方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-pairs-table"><span class="toc-number">2.1.</span> <span class="toc-text">1. pairs(table)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-table-insert-table-pos-value"><span class="toc-number">2.2.</span> <span class="toc-text">2. table.insert(table, pos, value)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-table-remove-table-pos"><span class="toc-number">2.3.</span> <span class="toc-text">3. table.remove(table, pos)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-for-in-do-end"><span class="toc-number">2.4.</span> <span class="toc-text">4. for  in   do   end</span></a></li></ol></li></ol>
-  </div>
 
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
-<aside class="clearfix">
-
-  
-
-  
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			<li><a href="/tags/CEGUI/" title="CEGUI">CEGUI<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Lua/" title="Lua">Lua<sup>2</sup></a></li>
-		
-			<li><a href="/tags/Others/" title="Others">Others<sup>1</sup></a></li>
-		
-			<li><a href="/tags/web/" title="web">web<sup>1</sup></a></li>
-		
-		</ul>
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
 </div>
 
 
-  
-  <div class="widget-wrap">
-    <h3 class="widget-title">Access Count</h3>
-    <div class="widget">
-      <ul class="popularlist">
-      </ul>
+
+
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Charles Tumi
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
     </div>
   </div>
-
-
-</aside>
-</div>
-    </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<div class="social-font" class="clearfix">
-		
-		
-		
-		
-	</div>
-		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wizicer/iceman" target="_blank" title="Iceman">Iceman</a> © 2016 
-		
-		<a href="http://tumi.tech" target="_blank" title="Charles Tumi">Charles Tumi</a>
-		
-		</p>
-</div>
 </footer>
-    <script src="/js/jquery-2.1.0.min.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else
-    {
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-});
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      h  = $('article h2')
-      ah = $('article h2'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  if(ah.length==0){
-    t.css('display','none');
-  }else{
-    c.click(function(){
-      ta.css('display', 'block').addClass('fadeIn');
-    });
-    o.click(function(){
-      ta.css('display', 'none');
-    });
-    $(window).scroll(function(){
-      ta.css("top",Math.max(140,320-$(this).scrollTop()));
-    });
-  };
-});
-</script>
+<script src="/./main.js"></script>
 
 
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina');
-  var html = [
-  '<a href="#" class="overlay" id="qrcode"></a>',
-  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
-  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-  $('.article-share-qrcode').click(function(){
-    var imgSrc = $('#qrcode-pic').attr('data-src');
-    $('#qrcode-pic').attr('src', imgSrc);
-    $('#qrcode-pic').load(function(){
-        $('.qrcode strong').text(' ');
-    });
-  });
-});     
-</script>
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
 
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/CEGUI/" style="font-size: 10px;">CEGUI</a> <a href="/tags/Lua/" style="font-size: 20px;">Lua</a> <a href="/tags/Others/" style="font-size: 10px;">Others</a> <a href="/tags/web/" style="font-size: 10px;">web</a>
+    			</div>
+    	</section>
+    
 
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"null"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接1</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接2</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接3</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接4</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接5</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接6</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
 
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
 
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
 
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
 
-<script type="text/javascript">
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-ga('create', 'UA-81286335-1', 'auto');  
-ga('send', 'pageview');
-</script>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
 
+            <div class="pswp__top-bar">
 
+                <!--  Controls are self-explanatory. Order can be changed. -->
 
-<!--page counter part-->
-<script>
-function addCount (Counter1) {
-        url=$('.article-date').attr('href').trim();
-        title = $('.article-title').text().trim();
-        var query=new AV.Query(Counter1);
-        //use url as unique idnetfication
-        query.equalTo("url",url);
-        query.find({
-            success: function(results){
-                if(results.length>0)
-                {
-                    var counter=results[0];
-                    counter.fetchWhenSave(true); //get recent result
-                    counter.increment("time");
-                    counter.save();
-                }
-                else
-                {
-                    var newcounter=new Counter1();
-                    newcounter.set("title",title);
-                    newcounter.set("url",url);
-                    newcounter.set("time",1);
-                    newcounter.save(null,{
-                        success: function(newcounter){
-                        //alert('New object created');
-                        },
-                        error: function(newcounter,error){
-                        alert('Failed to create');
-                        }
-                        });
-                }
-            },
-            error: function(error){
-                //find null is not a error
-                alert('Error:'+error.code+" "+error.message);
-            }
-        });
-}
-$(function(){
-        var Counter1=AV.Object.extend("Counter1");
-        //only increse visit counting when intering a page
-        if ($('.article-title').length == 1)
-           addCount(Counter1);
-        var query=new AV.Query(Counter1);
-        query.descending("time");
-        // the sum of popular posts
-        query.limit(10); 
-        query.find({
-            success: function(results){
-                    for(var i=0;i<results.length;i++)    
-                    {
-                        var counter=results[i];
-                        title=counter.get("title");
-                        url=counter.get("url");
-                        time=counter.get("time");
-                        // add to the popularlist widget
-                        showcontent=title+" ("+time+")";
-                        //notice the "" in href
-                        $('.popularlist').append('<li><a href="'+url+'">'+showcontent+'</a></li>');
-                    }
-                },
-            error: function(error){
-                alert("Error:"+error.code+" "+error.message);
-            }
-            }
-        )
-        });
-</script>
-  </body>
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
 </html>
-
