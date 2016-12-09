@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://tumi.tech/2016/10/25/get-char-from-uft8string/</loc>
+    
+    <lastmod>2016-12-09T03:13:34.186Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://tumi.tech/categories/index.html</loc>
     
     <lastmod>2016-11-11T07:02:03.579Z</lastmod>
@@ -26,13 +33,6 @@
     <loc>http://tumi.tech/2016/10/26/iterator-in-lua/</loc>
     
     <lastmod>2016-10-26T03:40:18.818Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://tumi.tech/2016/10/25/get-char-from-uft8string/</loc>
-    
-    <lastmod>2016-10-26T02:40:25.515Z</lastmod>
     
   </url>
   
