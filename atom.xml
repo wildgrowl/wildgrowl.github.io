@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://tumi.tech/"/>
-  <updated>2017-01-10T07:52:15.562Z</updated>
+  <updated>2017-01-10T07:55:37.141Z</updated>
   <id>http://tumi.tech/</id>
   
   <author>
@@ -20,13 +20,13 @@
     <link href="http://tumi.tech/2017/01/10/android-input-quick-switch/"/>
     <id>http://tumi.tech/2017/01/10/android-input-quick-switch/</id>
     <published>2017-01-10T06:45:35.000Z</published>
-    <updated>2017-01-10T07:52:15.562Z</updated>
+    <updated>2017-01-10T07:55:37.141Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>参考资料：<br><a href="http://stackoverflow.com/questions/15976837/calling-inputmethodmanager-setinputmethodibinder-token-string-id-outside-the/17084916" target="_blank" rel="external">http://stackoverflow.com/questions/15976837/calling-inputmethodmanager-setinputmethodibinder-token-string-id-outside-the/17084916</a><br><a href="http://blog.csdn.net/tongcpp/article/details/40344871" target="_blank" rel="external">http://blog.csdn.net/tongcpp/article/details/40344871</a></p>
 </blockquote>
 <h2 id="0-序"><a href="#0-序" class="headerlink" title="0. 序"></a>0. 序</h2><p>前段时间女朋友想换个OPPO R9S Plus，我觉得性价比太差，还不如多加点直接换个7，但去实体店体验了下感觉还不错，加上最近手头并不宽裕，索性就入手OPPO了。</p>
-<p>JD到货后与6s的拍照实力做了个对比（夜间室内），6s在它面前简直就像山寨机拍出来的，性能完爆，这样看来买的值了。</p>
+<p>之后与6s的拍照实力做了个对比（夜间室内），6s在它面前简直就像山寨机拍出来的，性能完爆。且续航能力惊人，毕竟是4000mA的大容量电池，这样看来买的值了。</p>
 <p>下面进入正题，由于女朋友有时需要用日文输入法，而OPPO能用的就只有Google日文输入法这个app，但是这个app不能打中文，且面板上没有切换到其他输入法的入口。而OPPO的系统做的比较简洁，没有像HTC系统可以在桌面添加设置的快捷方式，于是只能自己动手了。</p>
 <h2 id="1-思路"><a href="#1-思路" class="headerlink" title="1. 思路"></a>1. 思路</h2><h3 id="1-功能"><a href="#1-功能" class="headerlink" title="1. 功能"></a>1. 功能</h3><p>目的是切换输入法，这肯定有API可以直接用，起初看到的方法有三种：</p>
 <ol>
