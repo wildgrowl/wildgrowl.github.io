@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://tumi.tech/"/>
-  <updated>2016-10-26T08:38:05.543Z</updated>
+  <updated>2017-01-10T07:52:15.562Z</updated>
   <id>http://tumi.tech/</id>
   
   <author>
@@ -14,6 +14,43 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>安卓输入法快捷切换</title>
+    <link href="http://tumi.tech/2017/01/10/android-input-quick-switch/"/>
+    <id>http://tumi.tech/2017/01/10/android-input-quick-switch/</id>
+    <published>2017-01-10T06:45:35.000Z</published>
+    <updated>2017-01-10T07:52:15.562Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>参考资料：<br><a href="http://stackoverflow.com/questions/15976837/calling-inputmethodmanager-setinputmethodibinder-token-string-id-outside-the/17084916" target="_blank" rel="external">http://stackoverflow.com/questions/15976837/calling-inputmethodmanager-setinputmethodibinder-token-string-id-outside-the/17084916</a><br><a href="http://blog.csdn.net/tongcpp/article/details/40344871" target="_blank" rel="external">http://blog.csdn.net/tongcpp/article/details/40344871</a></p>
+</blockquote>
+<h2 id="0-序"><a href="#0-序" class="headerlink" title="0. 序"></a>0. 序</h2><p>前段时间女朋友想换个OPPO R9S Plus，我觉得性价比太差，还不如多加点直接换个7，但去实体店体验了下感觉还不错，加上最近手头并不宽裕，索性就入手OPPO了。</p>
+<p>JD到货后与6s的拍照实力做了个对比（夜间室内），6s在它面前简直就像山寨机拍出来的，性能完爆，这样看来买的值了。</p>
+<p>下面进入正题，由于女朋友有时需要用日文输入法，而OPPO能用的就只有Google日文输入法这个app，但是这个app不能打中文，且面板上没有切换到其他输入法的入口。而OPPO的系统做的比较简洁，没有像HTC系统可以在桌面添加设置的快捷方式，于是只能自己动手了。</p>
+<h2 id="1-思路"><a href="#1-思路" class="headerlink" title="1. 思路"></a>1. 思路</h2><h3 id="1-功能"><a href="#1-功能" class="headerlink" title="1. 功能"></a>1. 功能</h3><p>目的是切换输入法，这肯定有API可以直接用，起初看到的方法有三种：</p>
+<ol>
+<li>使用<code>InputMethodManager.setInputMethod(IBinder token, String id)</code>，但是第一个参数比较难获取，有人说用activeActivity.getCurrentFocus().getToken()，但还没试；</li>
+<li>使用<code>InputMethodService.switchInputMethod(String id)</code>，但是获取实例又比较难。</li>
+<li>使用<code>Settings.Secure.putString(MainActivity.this.getContentResolver(),Settings.Secure.DEFAULT_INPUT_METHOD, s)</code>写入系统设置，但是难在将app设置为system权限。</li>
+</ol>
+<p>以上都是在百度中找到的方法，之后一段时间自己也在努力解决其中的难点，这些网上也有很多人讨论但并没有看到合适的解决方法。之后Google了一下最终在<a href="http://stackoverflow.com/questions/15976837/calling-inputmethodmanager-setinputmethodibinder-token-string-id-outside-the/17084916" target="_blank" rel="external">Stack Overflow</a>上看到另一种思路：调出系统的切换输入法的面板，而不是像之前一样直接切换。这样难度下降了很多，但并不影响体验。</p>
+<h3 id="2-体验"><a href="#2-体验" class="headerlink" title="2. 体验"></a>2. 体验</h3><p>实现最简单同时体验上也相对比较友好的方案是，每次打开app或者切到前台时弹出输入法切换面板。</p>
+<h2 id="2-编码"><a href="#2-编码" class="headerlink" title="2. 编码"></a>2. 编码</h2><p>有了合适的API和用户交互方式，剩下的工作就比较简单了，直接上代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">		<span class="keyword">this</span>.getApplication().registerActivityLifecycleCallbacks(<span class="keyword">new</span> ActivityLifecycleCallbacks() &#123;  </div><div class="line">   </div><div class="line">    	<span class="meta">@Override</span>  </div><div class="line">    	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onActivityStopped</span><span class="params">(Activity activity)</span> </span>&#123;  </div><div class="line">        	Logger.v(activity, <span class="string">"onActivityStopped"</span>);  </div><div class="line">    	&#125;  </div><div class="line">   </div><div class="line">    	<span class="meta">@Override</span>  </div><div class="line">    	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onActivityStarted</span><span class="params">(Activity activity)</span> </span>&#123;</div><div class="line">        	Logger.v(activity, <span class="string">"onActivityStarted"</span>);  </div><div class="line">	        showIME(activity);</div><div class="line">    	&#125;  </div><div class="line">   </div><div class="line">    	<span class="meta">@Override</span>  </div><div class="line">    	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onActivitySaveInstanceState</span><span class="params">(Activity activity, Bundle outState)</span> </span>&#123;  </div><div class="line">	        Logger.v(activity, <span class="string">"onActivitySaveInstanceState"</span>);  </div><div class="line">    	&#125;  </div><div class="line">   </div><div class="line">        <span class="meta">@Override</span>  </div><div class="line">    	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onActivityResumed</span><span class="params">(Activity activity)</span> </span>&#123;  </div><div class="line">        	Logger.v(activity, <span class="string">"onActivityResumed"</span>); </div><div class="line">        	showIME(activity);</div><div class="line">  	  &#125;  </div><div class="line">   </div><div class="line">    	<span class="meta">@Override</span>  </div><div class="line">    	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onActivityPaused</span><span class="params">(Activity activity)</span> </span>&#123;  </div><div class="line">      	  Logger.v(activity, <span class="string">"onActivityPaused"</span>);  </div><div class="line">  	  &#125;  </div><div class="line">   </div><div class="line">    	<span class="meta">@Override</span>  </div><div class="line">    	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onActivityDestroyed</span><span class="params">(Activity activity)</span> </span>&#123;  </div><div class="line">        	Logger.v(activity, <span class="string">"onActivityDestroyed"</span>);  </div><div class="line">    	&#125;  </div><div class="line">   </div><div class="line">    	<span class="meta">@Override</span>  </div><div class="line">    	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onActivityCreated</span><span class="params">(Activity activity, Bundle savedInstanceState)</span> </span>&#123;  </div><div class="line">        	Logger.v(activity, <span class="string">"onActivityCreated"</span>);  </div><div class="line">    	&#125;  </div><div class="line">  		&#125;);    	</div><div class="line">    &#125;</div><div class="line"></div><div class="line">  	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="keyword">static</span> <span class="title">showIME</span><span class="params">(Activity activity)</span> </span>&#123;</div><div class="line">     	InputMethodManager imm = (InputMethodManager)</div><div class="line">                activity.getSystemService(Context.INPUT_METHOD_SERVICE);</div><div class="line">        imm.showInputMethodPicker();</div><div class="line">  	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;参考资料：&lt;br&gt;&lt;a href=&quot;http://stackoverflow.com/questions/15976837/calling-inputmethodmanager-setinputmethodibinder-token-string-
+    
+    </summary>
+    
+    
+      <category term="Android" scheme="http://tumi.tech/tags/Android/"/>
+    
+  </entry>
   
   <entry>
     <title>Hexo TOC 优化</title>
