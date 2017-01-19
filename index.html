@@ -280,6 +280,121 @@
             
               
                 
+                <a class="post-title-link" href="/2017/01/19/sublime-prefix-plugin/" itemprop="url">
+                  Sublime 文档信息插件开发
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-19T15:28:19+08:00" content="2017-01-19">
+              2017-01-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/19/sublime-prefix-plugin/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/19/sublime-prefix-plugin/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/01/19/sublime-prefix-plugin/" class="leancloud_visitors" data-flag-title="Sublime 文档信息插件开发">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="0-序"><a href="#0-序" class="headerlink" title="0. 序"></a>0. 序</h2><p>Sublime Text 3是一款极具扩展性的文本编辑器，这次我们通过官网提供的API，实现了一个快速插入时间、作者和描述信息的插件。</p>
+<h2 id="1-创建插件"><a href="#1-创建插件" class="headerlink" title="1. 创建插件"></a>1. 创建插件</h2><p>在Sublime中选择<code>Tools -&gt; Developer -&gt; New Plugin</code>，编写相应Python代码（详见下文），保存到<code>Sublime Text 3/Packages/prefix/prefix.py</code>。</p>
+<h2 id="2-主体代码"><a href="#2-主体代码" class="headerlink" title="2. 主体代码"></a>2. 主体代码</h2><p>目前的插件支持根据当前文档的语法（C++, Python, Lua）在光标位置添加作者，时间，描述等信息。代码如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sublime</div><div class="line"><span class="keyword">import</span> sublime_plugin</div><div class="line"><span class="keyword">import</span> datetime</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrefixCommand</span><span class="params">(sublime_plugin.TextCommand)</span>:</span></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self, edit)</span>:</span></div><div class="line">		curSyntax = self.view.settings().get(<span class="string">'syntax'</span>)</div><div class="line">		dt = datetime.datetime.now().strftime(<span class="string">"%Y-%m-%d"</span>)</div><div class="line">		prefix = <span class="string">''</span></div><div class="line">		<span class="keyword">if</span> <span class="string">'Lua'</span> <span class="keyword">in</span> curSyntax:</div><div class="line">			prefix = prefix + <span class="string">'-------------------------\n'</span></div><div class="line">			prefix = prefix + <span class="string">'-- author: tumi\n'</span></div><div class="line">			prefix = prefix + <span class="string">'-- date:   '</span> + dt + <span class="string">'\n'</span></div><div class="line">			prefix = prefix + <span class="string">'-- desc:   \n'</span></div><div class="line">			prefix = prefix + <span class="string">'-------------------------\n'</span></div><div class="line">		<span class="keyword">elif</span> <span class="string">'Python'</span> <span class="keyword">in</span> curSyntax:</div><div class="line">			prefix = prefix + <span class="string">'#########################\n'</span></div><div class="line">			prefix = prefix + <span class="string">'## author: tumi\n'</span></div><div class="line">			prefix = prefix + <span class="string">'## date:   '</span> + dt + <span class="string">'\n'</span></div><div class="line">			prefix = prefix + <span class="string">'## desc:   \n'</span></div><div class="line">			prefix = prefix + <span class="string">'#########################\n'</span></div><div class="line">		<span class="keyword">elif</span> <span class="string">'C++'</span> <span class="keyword">in</span> curSyntax:</div><div class="line">			prefix = <span class="string">'/**\n  * @author #tumi\n  * @date   #'</span> + dt + <span class="string">'\n  * @desc   #des\n  */'</span></div><div class="line">		<span class="keyword">if</span> prefix != <span class="string">''</span>:</div><div class="line">			self.view.insert(edit, self.view.sel()[<span class="number">0</span>].begin(), prefix)</div></pre></td></tr></table></figure>
+<h2 id="3-快捷键设置"><a href="#3-快捷键设置" class="headerlink" title="3. 快捷键设置"></a>3. 快捷键设置</h2><p>在Sublime偏好设置的Key Bindings中添加如下配置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	&quot;command&quot;: &quot;prefix&quot;,</div><div class="line">	&quot;keys&quot;: [&quot;ctrl+shift+.&quot;]</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/01/10/android-input-quick-switch/" itemprop="url">
                   安卓输入法快捷切换
                 </a>
@@ -1050,7 +1165,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1060,7 +1175,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
