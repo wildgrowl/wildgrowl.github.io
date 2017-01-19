@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://tumi.tech/"/>
-  <updated>2017-01-19T07:39:16.150Z</updated>
+  <updated>2017-01-19T07:46:11.083Z</updated>
   <id>http://tumi.tech/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Sublime 文档信息插件开发</title>
+    <title>Sublime 文档前缀信息插件</title>
     <link href="http://tumi.tech/2017/01/19/sublime-prefix-plugin/"/>
     <id>http://tumi.tech/2017/01/19/sublime-prefix-plugin/</id>
     <published>2017-01-19T07:28:19.000Z</published>
-    <updated>2017-01-19T07:39:16.150Z</updated>
+    <updated>2017-01-19T07:46:11.083Z</updated>
     
     <content type="html"><![CDATA[<h2 id="0-序"><a href="#0-序" class="headerlink" title="0. 序"></a>0. 序</h2><p>Sublime Text 3是一款极具扩展性的文本编辑器，这次我们通过官网提供的API，实现了一个快速插入时间、作者和描述信息的插件。</p>
 <h2 id="1-创建插件"><a href="#1-创建插件" class="headerlink" title="1. 创建插件"></a>1. 创建插件</h2><p>在Sublime中选择<code>Tools -&gt; Developer -&gt; New Plugin</code>，编写相应Python代码（详见下文），保存到<code>Sublime Text 3/Packages/prefix/prefix.py</code>。</p>
