@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://tumi.tech/2017/02/16/build-pureftpd-server/</loc>
+    
+    <lastmod>2017-02-16T06:39:59.714Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://tumi.tech/2017/01/19/sublime-prefix-plugin/</loc>
     
     <lastmod>2017-01-19T07:47:26.552Z</lastmod>
